@@ -4,7 +4,8 @@ import {
     ActionPostResponse,
     ActionGetResponse,
     ActionPostRequest,
-    ACTIONS_CORS_HEADERS
+    ACTIONS_CORS_HEADERS,
+    BLOCKCHAIN_IDS
   } from '@solana/actions';
   import {
     clusterApiUrl,
@@ -21,13 +22,11 @@ import {
   export const GET = async (req: Request) => {
     try {
       const requestUrl = new URL(req.url);
-      const { toPubkey } = validatedQueryParams(requestUrl);
   
       const baseHref = new URL(
         `/api/actions/sendMessage?`,
         requestUrl.origin,
       ).toString();
-  
       const payload: ActionGetResponse = {
         type: 'action',
         title: 'Send a Message to Wallet',
@@ -58,7 +57,7 @@ import {
       };
   
       return Response.json(payload, {
-        headers: ACTIONS_CORS_HEADERS,
+        headers: {...ACTIONS_CORS_HEADERS, ...BLOCKCHAIN_IDS},
       });
     } catch (err) {
       console.log(err);
@@ -180,7 +179,7 @@ import {
         toPubkey = new PublicKey(requestUrl.searchParams.get('receiverWallet')!);
       }
     } catch (err) {
-      throw 'Invalid input query parameter: to';
+      throw 'Invalid input query parameter: receiverWallet';
     }
   
     try {
