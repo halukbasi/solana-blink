@@ -4,8 +4,6 @@ import {
     ActionPostResponse,
     ActionGetResponse,
     ActionPostRequest,
-    ACTIONS_CORS_HEADERS,
-    BLOCKCHAIN_IDS
   } from '@solana/actions';
   import {
     clusterApiUrl,
@@ -57,7 +55,7 @@ import {
       };
   
       return Response.json(payload, {
-        headers: {...ACTIONS_CORS_HEADERS, ...BLOCKCHAIN_IDS},
+        headers,
       });
     } catch (err) {
       console.log(err);
