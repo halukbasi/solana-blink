@@ -24,7 +24,7 @@ import {
       const { toPubkey } = validatedQueryParams(requestUrl);
   
       const baseHref = new URL(
-        `/api/actions/sendMessage?to=${toPubkey.toBase58()}`,
+        `/api/actions/sendMessage?`,
         requestUrl.origin,
       ).toString();
   
@@ -39,7 +39,7 @@ import {
           actions: [
             {
               label: 'Send', // button text
-              href: `${baseHref}&receiverWallet={receiverWallet}&phrase={phrase}`, // this href will have a text input
+              href: `${baseHref}receiverWallet={receiverWallet}&phrase={phrase}`, // this href will have a text input
               parameters: [
                 {
                   name: 'receiverWallet', // parameter name in the `href` above
