@@ -1,6 +1,7 @@
-# How it looks
+# How It's Looks Like
 ![image](https://github.com/user-attachments/assets/4768e58f-f032-4ee3-96d2-efb554b741a9)
-Link: https://x.com/subsiesNFT/status/1841152722038329611
+# Link: 
+https://x.com/subsiesNFT/status/1841152722038329611
 # Check Result
 ![Ekran Görüntüsü - 2024-10-01 19-28-59](https://github.com/user-attachments/assets/b031dbb9-f07c-4d05-b066-83bc260b0eb9)
 
