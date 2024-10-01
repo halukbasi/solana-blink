@@ -1,3 +1,7 @@
+![image](https://github.com/user-attachments/assets/4768e58f-f032-4ee3-96d2-efb554b741a9)
+![Ekran Görüntüsü - 2024-10-01 19-28-59](https://github.com/user-attachments/assets/b031dbb9-f07c-4d05-b066-83bc260b0eb9)
+
+
 # @dialectlabs/actions
 
 This repository contains reference implementations of Solana Actions using [Hono](https://hono.dev/), [Next.js](https://nextjs.org/), and [Express](https://expressjs.com/).
