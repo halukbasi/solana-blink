@@ -143,6 +143,7 @@ import {
             [senderWallet]
           );
           console.log('Transaction confirmed with signature', signature);
+          receiverCount = receiverCount + 1;
         } catch (error) {
           console.error('Transaction failed', error);
         }
@@ -177,7 +178,6 @@ import {
     let toPubkey: PublicKey = new PublicKey(
       'FhEcCfQuwu7yvpZwyKJcu99EbrBoALW7dxtsK6x6Dsfi',
     );
-    receiverCount = receiverCount + 1;
     // icon_ = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/640px-Bitcoin.svg.png';
   
     try {
