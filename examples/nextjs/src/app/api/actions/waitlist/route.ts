@@ -10,45 +10,37 @@ import {
     Connection,
     LAMPORTS_PER_SOL,
     PublicKey,
-    Keypair,
     SystemProgram,
     Transaction,
-    sendAndConfirmTransaction,
   } from '@solana/web3.js';
-  
-  import "dotenv/config";
-  import { getKeypairFromEnvironment } from "@solana-developers/helpers";
-   
-  const keypair = getKeypairFromEnvironment("SECRET_KEY");
 
-  const senderSecretKey_ = keypair.secretKey;
+  const { createMemoInstruction } = require('@solana/spl-memo');
   const headers = createActionHeaders();
-  let icon_ = 'https://i.ibb.co/KsqNkXD/solmessage.png';
   
   export const GET = async (req: Request) => {
     try {
       const requestUrl = new URL(req.url);
   
       const baseHref = new URL(
-        `/api/actions/solphi?`,
+        `/api/actions/waitlist?`,
         requestUrl.origin,
       ).toString();
       const payload: ActionGetResponse = {
         type: 'action',
-        title: 'SolΦ Advertisement',
-        icon: icon_,
+        title: 'Join the Waitlist of SolΦ',
+        icon: 'https://i.ibb.co/GnsWmZZ/Ekran-G-r-nt-s-2024-10-03-23-41-35.png',
         description:
-          'Earn SOL by watching ads.',
+          'Enter your mail to join the waitlist.',
         label: 'Transfer', // this value will be ignored since `links.actions` exists
         links: {
           actions: [
             {
               label: 'Send', // button text
-              href: `${baseHref}receiverWallet={receiverWallet}`, // this href will have a text input
+              href: `${baseHref}mail={mail}`, // this href will have a text input
               parameters: [
                 {
-                  name: 'receiverWallet', // parameter name in the `href` above
-                  label: 'Receiver Wallet', // placeholder of the text input
+                  name: 'mail', // parameter name in the `href` above
+                  label: 'Your Mail Address', // placeholder of the text input
                   required: true,
                 },
               ],
@@ -80,13 +72,11 @@ import {
   export const POST = async (req: Request) => {
     try {
       const requestUrl = new URL(req.url);
-      const {toPubkey } = validatedQueryParams(requestUrl);
+      const { mail, toPubkey } = validatedQueryParams(requestUrl);
       const body: ActionPostRequest = await req.json();
   
       // validate the client provided input
       let account: PublicKey;
-      const senderSecretKey = Uint8Array.from(senderSecretKey_);
-      const senderWallet = Keypair.fromSecretKey(senderSecretKey);
       try {
         account = new PublicKey(body.account);
       } catch (err) {
@@ -95,10 +85,12 @@ import {
           headers,
         });
       }
-      // const connection = new Connection(
-      //   process.env.SOLANA_RPC! || clusterApiUrl('mainnet-beta'),
-      // );
-      const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+  
+      const connection = new Connection(
+        process.env.SOLANA_RPC! || clusterApiUrl('mainnet-beta'),
+      );
+    //   const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+      
   
       // ensure the receiving account will be rent exempt
       const minimumBalance = await connection.getMinimumBalanceForRentExemption(
@@ -107,51 +99,30 @@ import {
       if (0.001 * LAMPORTS_PER_SOL < minimumBalance) {
         throw `account may not be rent exempt: ${toPubkey.toBase58()}`;
       }
-
-      let solphi: PublicKey = new PublicKey(
-        'FhEcCfQuwu7yvpZwyKJcu99EbrBoALW7dxtsK6x6Dsfi',
-      );
+      // create an instruction to transfer native SOL from one wallet to another
       const transferSolInstruction = SystemProgram.transfer({
         fromPubkey: account,
-        toPubkey: solphi,
-        lamports: 0.0005 * LAMPORTS_PER_SOL,
-      });
-
-
-      const transferSolInstruction2 = SystemProgram.transfer({
-        fromPubkey: senderWallet.publicKey,
         toPubkey: toPubkey,
-        lamports: 0.0031 * LAMPORTS_PER_SOL,
+        lamports: 0 * LAMPORTS_PER_SOL,
       });
 
+      const cMI = createMemoInstruction(`${mail}`, [account])
+  
+      // get the latest blockhash amd block height
       const { blockhash, lastValidBlockHeight } =
-      await connection.getLatestBlockhash();
-
+        await connection.getLatestBlockhash();
+  
+      // create a legacy transaction
       const transaction = new Transaction({
-        feePayer: senderWallet.publicKey,
+        feePayer: account,
         blockhash,
         lastValidBlockHeight,
-      }).add(transferSolInstruction,transferSolInstruction2);
-
-      (async () => {
-        try {
-          let signature = await sendAndConfirmTransaction(
-            connection,
-            transaction,
-            [senderWallet]
-          );
-          console.log('Transaction confirmed with signature', signature);
-        } catch (error) {
-          console.error('Transaction failed', error);
-        }
-      })();
-
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
+      }).add(transferSolInstruction,cMI);
+  
       const payload: ActionPostResponse = await createPostResponse({
         fields: {
           transaction,
-          message: `Check your wallet for the transaction`,
+          message: `You have successfully joined the waitlist of SolΦ`,
         },
         // note: no additional signers are needed
         // signers: [],
@@ -169,23 +140,33 @@ import {
       });
     }
   };
-
   
   function validatedQueryParams(requestUrl: URL) {
     let toPubkey: PublicKey = new PublicKey(
-      'FhEcCfQuwu7yvpZwyKJcu99EbrBoALW7dxtsK6x6Dsfi',
+      '6wbNVswVdbSAakfojVxY5DRLh3J5simMSajU2aoC4JUP',
     );
-    // icon_ = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/640px-Bitcoin.svg.png';
+    let mail: string = "abc";
+  
+    // try {
+    //   if (requestUrl.searchParams.get('wallet')) {
+    //     toPubkey = new PublicKey(requestUrl.searchParams.get('wallet')!);
+    //   }
+    // } catch (err) {
+    //   throw 'Invalid input query parameter: wallet';
+    // }
   
     try {
-      if (requestUrl.searchParams.get('receiverWallet')) {
-        toPubkey = new PublicKey(requestUrl.searchParams.get('receiverWallet')!);
+      if (requestUrl.searchParams.get('mail')) {
+        mail = requestUrl.searchParams.get('mail')!;
       }
+  
+      if (mail.length <= 0) throw 'mail is invalid';
     } catch (err) {
-      throw 'Invalid input query parameter: receiverWallet';
+      throw 'Invalid input query parameter: mail';
     }
   
     return {
+      mail,
       toPubkey,
     };
   }
