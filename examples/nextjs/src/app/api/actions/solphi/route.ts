@@ -23,8 +23,6 @@ import {
 
   const senderSecretKey_ = keypair.secretKey;
   const headers = createActionHeaders();
-  let receiverCount = 0;
-  let totalAmount = 100;
   let icon_ = 'https://i.ibb.co/KsqNkXD/solmessage.png';
   
   export const GET = async (req: Request) => {
@@ -37,7 +35,7 @@ import {
       ).toString();
       const payload: ActionGetResponse = {
         type: 'action',
-        title: 'SolΦ Advertisement | Left: ' + receiverCount + '/' + totalAmount,
+        title: 'SolΦ Advertisement',
         icon: icon_,
         description:
           'Earn SOL by watching ads.',
@@ -143,7 +141,6 @@ import {
             [senderWallet]
           );
           console.log('Transaction confirmed with signature', signature);
-          receiverCount = receiverCount + 1;
         } catch (error) {
           console.error('Transaction failed', error);
         }
