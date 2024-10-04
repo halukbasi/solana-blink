@@ -22,7 +22,7 @@ import {
 
   const senderSecretKey_ = keypair.secretKey;
   const headers = createActionHeaders();
-  let icon_ = 'https://s5.ezgif.com/tmp/ezgif-5-ffe6359285.gif';
+  let icon_ = 'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWU0bzQ4ZDE0N3I1bTJxcTM0cTkwbmpycWdidDAwcDI5OGd2ejhxdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NKR2s2vqHqETBGTlaX/giphy.gif';
 
   export const GET = async (req: Request) => {
 
