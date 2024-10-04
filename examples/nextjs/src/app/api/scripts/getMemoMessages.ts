@@ -1,10 +1,8 @@
 
 const fetchSignaturesForAddress = async () => {
-  const url = "https://api.devnet.solana.com";
-  // const connection = new Connection(
-  //   process.env.SOLANA_RPC! || clusterApiUrl('mainnet-beta'),
-  // );
-  
+  // const url = "https://api.devnet.solana.com";
+  const url = "https://api.mainnet-beta.solana.com";
+
   // JSON RPC payload'ı
   const payload = {
     jsonrpc: "2.0",

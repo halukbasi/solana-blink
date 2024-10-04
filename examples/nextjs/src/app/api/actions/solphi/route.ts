@@ -18,17 +18,16 @@ import {
   
   import "dotenv/config";
   import { getKeypairFromEnvironment } from "@solana-developers/helpers";
-   
   const keypair = getKeypairFromEnvironment("SECRET_KEY");
 
   const senderSecretKey_ = keypair.secretKey;
   const headers = createActionHeaders();
-  let icon_ = 'https://i.ibb.co/KsqNkXD/solmessage.png';
-  
+  let icon_ = 'https://s5.ezgif.com/tmp/ezgif-5-ffe6359285.gif';
+
   export const GET = async (req: Request) => {
+
     try {
       const requestUrl = new URL(req.url);
-  
       const baseHref = new URL(
         `/api/actions/solphi?`,
         requestUrl.origin,
@@ -40,6 +39,7 @@ import {
         description:
           'Earn SOL by watching ads.',
         label: 'Transfer', // this value will be ignored since `links.actions` exists
+        disabled: false,
         links: {
           actions: [
             {
@@ -56,10 +56,12 @@ import {
           ],
         },
       };
-  
+      
+      
       return Response.json(payload, {
         headers,
       });
+
     } catch (err) {
       console.log(err);
       let message = 'An unknown error occurred';
@@ -79,6 +81,7 @@ import {
   
   export const POST = async (req: Request) => {
     try {
+      
       const requestUrl = new URL(req.url);
       const {toPubkey } = validatedQueryParams(requestUrl);
       const body: ActionPostRequest = await req.json();
@@ -95,10 +98,10 @@ import {
           headers,
         });
       }
-      // const connection = new Connection(
-      //   process.env.SOLANA_RPC! || clusterApiUrl('mainnet-beta'),
-      // );
-      const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+      const connection = new Connection(
+        process.env.SOLANA_RPC! || clusterApiUrl('mainnet-beta'),
+      );
+      // const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
   
       // ensure the receiving account will be rent exempt
       const minimumBalance = await connection.getMinimumBalanceForRentExemption(
@@ -175,7 +178,6 @@ import {
     let toPubkey: PublicKey = new PublicKey(
       'FhEcCfQuwu7yvpZwyKJcu99EbrBoALW7dxtsK6x6Dsfi',
     );
-    // icon_ = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/640px-Bitcoin.svg.png';
   
     try {
       if (requestUrl.searchParams.get('receiverWallet')) {
@@ -189,4 +191,6 @@ import {
       toPubkey,
     };
   }
+
+
   
