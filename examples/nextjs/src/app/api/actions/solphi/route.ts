@@ -39,7 +39,7 @@ import {
         description:
           'Earn SOL by watching ads.',
         label: 'Transfer', // this value will be ignored since `links.actions` exists
-        disabled: false,
+        disabled: true,
         links: {
           actions: [
             {
